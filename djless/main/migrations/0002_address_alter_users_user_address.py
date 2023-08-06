@@ -4,13 +4,23 @@ from django.db import migrations, models
 import django.db.models.deletion
 
 
-class Migration(migrations.Migration):
+def del_address(apps, schema_editor):
+    Users = apps.get_model('main', 'Users')
+    Address = apps.get_model('main', 'Address')
+    for user in Users.objects.all():
+        address = Address.objects.get_or_create(address=user.user_address)[0]
+        # print(address)
+        user.user_address = address.id
+        user.save()
 
+
+class Migration(migrations.Migration):
     dependencies = [
         ('main', '0001_initial'),
     ]
 
     operations = [
+
         migrations.CreateModel(
             name='Address',
             fields=[
@@ -18,6 +28,9 @@ class Migration(migrations.Migration):
                 ('address', models.TextField()),
             ],
         ),
+
+        migrations.RunPython(del_address),
+
         migrations.AlterField(
             model_name='users',
             name='user_address',
