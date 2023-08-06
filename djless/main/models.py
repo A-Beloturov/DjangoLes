@@ -11,4 +11,5 @@ class Users(models.Model):
     user_mail = models.CharField(max_length=20)
     user_address = models.ForeignKey(Address, on_delete=models.PROTECT)
 
+
 # Create your models here.
